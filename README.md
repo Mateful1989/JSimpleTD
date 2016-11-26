@@ -1,2 +1,2 @@
 # JSimpleTD
-A simple tower defense game in JavaScript
+A simple tower defense game in JavaScript.
