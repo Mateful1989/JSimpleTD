@@ -1,5 +1,7 @@
 "use strict";
 
+console.log("LOADING TEXTURES.JS");
+
 class TextureLoader {
     constructor(files, onProgress) {
         for (var o of files) {

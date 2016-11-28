@@ -20,10 +20,12 @@ function init(configurationFilename) {
         // init renderer, appends canvas to document.body
         let rendererWrapper = new RendererWrapper(w, h, cfg.bgColor, cfg.tileSize, texturePack, (r) => { document.body.appendChild(r); });
 
+        window.rendererWrapper = rendererWrapper;
+
         // import and render map
         Utils.getText(cfg.mapFilename).then((mapString) => {
             rendererWrapper.initMap(new TDMap(mapString))
-            rendererWrapper.initUnits();
+            // rendererWrapper.initUnits();
         });
     }
 

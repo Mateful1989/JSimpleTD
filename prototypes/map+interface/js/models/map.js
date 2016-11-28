@@ -1,17 +1,15 @@
 "use strict";
 
+console.log("LOADING MAP.JS");
 
 class TDMap {
     constructor(mapString) {
+        console.log("construct TDMap", mapString);
         let tiles = mapString.replace(/\r\n/g, "\n").split("\n").map((x) => x.split(""));
 
         console.log(tiles);
 
-        if (new Set(tiles.map((x) => x.length)).size != 1) {
-            throw Error("Every line must be the same length.");
-        }
-
-        this._tiles = tiles;
+        this.tiles = tiles;
     }
 
     get tiles() {
@@ -19,7 +17,49 @@ class TDMap {
     }
 
     set tiles(tiles) {
+        if (!tiles) {
+            throw new Error("Must contain at least one tile");
+        }
+
+        if (new Set(tiles.map((x) => x.length)).size != 1) {
+            throw new Error("Every line must be the same length.");
+        }
+
         this._tiles = tiles;
+        this.w = tiles[0].length;
+        this.h = tiles.length;
+    }
+
+    getPositionsByType(type) {
+        let result = [];
+
+        for (var x = 0; x < this.w; x++) {
+            for (var y = 0; y < this.h; y++) {
+                if (this._tiles[y][x] == type) {
+                    result.push([x, y]);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    getSpawnPoints() {
+        return this.getPositionsByType("s");
+    }
+
+    getDestinationPoints() {
+        return this.getPositionsByType("d");
+    }
+
+    isPathable(x, y) {
+        const pathableTiles = ["o", "s", "d"];
+
+        if (x < 0 || y < 0 || x >= this.w || y >= this.h) {
+            return false;
+        } else {
+            return pathableTiles.indexOf(this._tiles[y][x]) !== -1;
+        }
     }
 }
 
@@ -33,6 +73,7 @@ class GridRenderer {
         this._height = 0;
 
         this._container = new PIXI.ParticleContainer(); //DisplayObjectContainer();
+        this._container.interactive = true;
 
         if (this.tiles) {
             this.updateGrid();
@@ -57,12 +98,30 @@ class GridRenderer {
                 tileSprite.y = y * this.tileSize;
                 tileSprite.width = this.tileSize;
                 tileSprite.height = this.tileSize;
-                // tileSprite._tileType = tileType;
+                tileSprite._tileType = tileType;
 
-                // tileSprite.on('mousedown', () => {
-                //     this._tileType = (this._tileType + 1) % 2;
-                //     this.setTexture(textureDict[this._tileType]);
-                // });
+                console.log("adding mousedown");
+                tileSprite.on('mousedown', ((ctx, tile) => {
+                    return () => {
+                        console.log("mousedown");
+                        switch (tile._tileType) {
+                            case "o":
+                                tile._tileType = "x";
+                                break;
+                            case "x":
+                                tile._tileType = "d";
+                                break;
+                            case "d":
+                                tile._tileType = "s";
+                                break;
+                            case "s":
+                                tile._tileType = "o";
+                                break;
+                            default:
+                        }
+                        tile.setTexture(ctx.texturePack[tile._tileType]);
+                    }
+                })(this, tileSprite));
 
                 this.container.addChild(tileSprite);
             }

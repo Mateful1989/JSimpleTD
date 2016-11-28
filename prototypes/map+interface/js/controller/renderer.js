@@ -1,5 +1,8 @@
 "use strict";
 
+
+console.log("LOADING RENDERER.JS");
+
 class RendererWrapper {
     constructor(width, height, bgColor, tileSize, texturePack, appendFn) {
         console.log("constructor of " + this.constructor.name, arguments)
@@ -22,7 +25,9 @@ class RendererWrapper {
 
         this.stage = new PIXI.Container();
         this.stage.interactive = true;
+
         this.state = "running";
+       
         this.lastFrameTime = new Date();
 
         this.gridRenderer = null;
@@ -77,4 +82,3 @@ class RendererWrapper {
         }
     }
 }
-

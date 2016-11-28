@@ -1,10 +1,10 @@
 {
     "bgColor": 5592405,
-    "mapFilename": "assets/maps/default.txt",
+    "mapFilename": "assets/maps/test1.txt",
     "tileSize": 32,
     "textureFilenames": ["assets/images/spritesheets.json", {
         "name": "bunny",
         "url": "assets/images/bunny.png"
     }],
-    "scripts": ["js/models/units.js", "js/models/map.js", "js/models/textures.js", "js/controller/renderer.js"]
+    "scripts": ["js/models/units.js", "js/models/map.js", "js/models/textures.js", "js/controller/search.js", "js/controller/renderer.js"]
 }
