@@ -1,0 +1,45 @@
+{
+    "meta": {
+        "image": "spritesheets.png",
+        "size": { "w": 192, "h": 192 },
+        "scale": "1"
+    },
+    "frames": {
+        "o": {
+            "frame": { "x": 0, "y": 160, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        },
+        "x": {
+            "frame": { "x": 64, "y": 128, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        },
+        "s": {
+            "frame": { "x": 32, "y": 160, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        },
+        "d": {
+            "frame": { "x": 32, "y": 64, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        },
+        "monster#1": {
+            "frame": { "x": 96, "y": 0, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        }
+
+    }
+}
