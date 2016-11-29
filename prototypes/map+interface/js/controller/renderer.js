@@ -30,6 +30,11 @@ class StageRenderer {
 
         this.stage.on("mousedown", (event) => {
             console.log("mousedown on map", event);
+
+            if (this.state != "running") {
+                return;
+            }
+
             let x = Math.floor(event.data.global.x / this.tileSize),
                 y = Math.floor(event.data.global.y / this.tileSize);
 
@@ -64,7 +69,19 @@ class StageRenderer {
 
         this.boundaries = null;
 
+        this.menus = [];
+
+
+
         this.gameLoop();
+    }
+
+    pause() {
+        this.state = "pause";
+    }
+
+    unpause() {
+        this.state = "running";
     }
 
     initMap(map) {
@@ -102,12 +119,46 @@ class StageRenderer {
 
     }
 
+    initMenus() {
+        let w = 110,
+            h = 45;
+        let x = (this.renderer.width - w) / 2,
+            y = (this.renderer.height - h) / 2;
+
+        
+        this.menus.push(new Menu(x, y, w, h, "main", "Pause!"));
+
+        for (var m of this.menus) {
+            this.stage.addChild(m.container);
+            m.container.visible = false;
+        }
+    }
+
+    showMenu(id) {
+        for (var m of this.menus) {
+            if (m.id == id) {
+                m.container.visible = true;
+            }
+        }
+    }
+
+    hideMenu(id) {
+        for (var m of this.menus) {
+            if (m.id == id) {
+                m.container.visible = false;
+            }
+        }
+    }
+
     gameLoop() {
         let thisFrameTime = new Date();
         let dt = (thisFrameTime - this.lastFrameTime) / 1000.; // time difference
 
         requestAnimationFrame(() => this.gameLoop());
-        this.update(dt);
+
+        if (this.state == "running") {
+            this.update(dt);
+        }
         this.renderer.render(this.stage);
 
         this.lastFrameTime = thisFrameTime;

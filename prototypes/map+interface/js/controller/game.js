@@ -4,12 +4,37 @@ class GameController {
         this.stageRenderer = new StageRenderer(0, 0, this.config.autoresize, this.config.bgColor, this.config.tileSize, texturePack, bindCanvasFnc);
         this.map = null;
 
+
+
         // import and render map
         Utils.getText(config.mapFilename).then((mapString) => {
             this.map = new TDMap(mapString);
             this.stageRenderer.initMap(this.map);
             this.stageRenderer.initUnits(0);
+            this.stageRenderer.initMenus(-1);
         });
+
+
+        var onEscape = InputController.key(27);
+
+        this.state = "game";
+
+        onEscape.release = (event) => {
+            console.log(this, event);
+            switch (this.state) {
+                case "game":
+                    this.stageRenderer.showMenu("main");
+                    this.stageRenderer.pause();
+                    this.state = "menu_main";
+                    break;
+
+                case "menu_main":
+                    this.stageRenderer.hideMenu("main");
+                    this.stageRenderer.unpause();
+                    this.state = "game";
+                    break;
+            }
+        }
     }
 
     spawnUnit() {
