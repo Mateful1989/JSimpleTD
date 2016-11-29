@@ -106,6 +106,10 @@ class Config {
         return this.config["scripts"] || [];
     }
 
+    get autoresize() {
+        return this.config["autoresize"] || true;
+    }
+
     onLoaded(fnc) {
         if (fnc) {
             this._promise.then(fnc);

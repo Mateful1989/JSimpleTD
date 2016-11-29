@@ -1,3 +1,5 @@
+console.log("LOADING SEARCH.JS");
+
 class Point {
     constructor(x, y) {
         this.x = x;
@@ -58,6 +60,7 @@ function search(map, start, end) {
     console.log("searching", map, start, end);
 
     function heuristic(a, b) {
+        //return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
@@ -86,7 +89,7 @@ function search(map, start, end) {
     function insertNodeSorted(node, array) {
         let i = array.length - 1;
 
-        while (node < array[i] && i >= 0) {
+        while (i >= 0 && node.score < array[i].score) {
             i -= 1
         }
 
@@ -106,12 +109,22 @@ function search(map, start, end) {
     cameFrom[start.toString()] = null;
     gCostSoFar[start.toString()] = 0
 
+    function logFrontier(msg, x) {
+        var frontierToText = (x) => {
+            return x.map((x) => String(x.score) + ";" + x.toString()).join(", ");
+        }
+
+        console.log(msg, frontierToText(x));
+    }
+
     while (frontier.length > 0) {
-        // console.log(frontier);
+        logFrontier("pre shift", frontier);
 
         let current = frontier.shift();
 
-        // console.log("current", current, "compare to", end);
+        logFrontier("post shift", frontier);
+
+        console.log("  >current pos", current.pos, "compare to", end);
 
         if (current.pos.equals(end)) {
             isGoalReached = true;
@@ -120,20 +133,24 @@ function search(map, start, end) {
 
         let neighbours = getNeighbours(current);
 
-        // console.log("neighbours", neighbours);
+        console.log("neighbours", neighbours);
 
         for (var next of neighbours) {
             let gCost = gCostSoFar[current] + 1;
 
-            if (!(next in gCostSoFar) || gCost < gCostSoFar[next.toString()]) {
+            if (!(next.toString() in gCostSoFar) || gCost < gCostSoFar[next.toString()]) {
                 gCostSoFar[next.toString()] = gCost;
                 let hCost = heuristic(next, end);
                 let fCost = gCost + hCost;
-                insertNodeSorted(new Node(next, fCost), frontier);
+                frontier = insertNodeSorted(new Node(next, fCost), frontier);
                 cameFrom[next.toString()] = current;
+                console.log("neighbour:", next, fCost);
             }
         }
+        console.log("after insertion:", frontier);
     }
+
+    console.log("Came from array", cameFrom);
 
     return [isGoalReached, cameFrom];
 }
@@ -148,6 +165,28 @@ function reconstructPath(cameFrom, start, end) {
     }
     path.reverse();
     return path
+}
+
+function calculateShortestPath(map, a, b) {
+    if (!a || !b) {
+        return [];
+    }
+    
+    let startPoint = Point.fromArray(a),
+        endPoint = Point.fromArray(b);
+
+    let [isPathFound, cameFrom] = search(map, startPoint, endPoint);
+
+    let path = [];
+
+    if (isPathFound) {
+        path = reconstructPath(cameFrom, startPoint, endPoint);
+    }
+
+    console.log("found path:", path);
+    console.log(path.map((x) => x.toString()));
+
+    return path;
 }
 
 

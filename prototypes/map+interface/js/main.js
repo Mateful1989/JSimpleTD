@@ -1,5 +1,7 @@
 "use strict";
 
+window.GameController = {};
+
 function init(configurationFilename) {
     let cfg = new Config(configurationFilename);
 
@@ -10,26 +12,22 @@ function init(configurationFilename) {
     }
 
     function startGame() {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
+        // const w = window.innerWidth;
+        // const h = window.innerHeight;
 
         console.log(PIXI.utils.TextureCache);
 
         let texturePack = PIXI.utils.TextureCache // {};
 
-        // init renderer, appends canvas to document.body
-        let rendererWrapper = new RendererWrapper(w, h, cfg.bgColor, cfg.tileSize, texturePack, (r) => { document.body.appendChild(r); });
-
-        window.rendererWrapper = rendererWrapper;
-
-        // import and render map
-        Utils.getText(cfg.mapFilename).then((mapString) => {
-            rendererWrapper.initMap(new TDMap(mapString))
-            // rendererWrapper.initUnits();
-        });
+        window.GameController = new GameController(texturePack, cfg, (r) => { document.body.appendChild(r); });
     }
 
     cfg.onLoaded(() => {
         Utils.loadScripts(cfg.scripts, loadTextures);
+    });
+
+
+    document.getElementById("btn-spawn").addEventListener("click", function(event) {
+        window.GameController.spawnUnit();
     });
 }

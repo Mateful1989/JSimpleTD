@@ -18,7 +18,7 @@ class TDMap {
 
     set tiles(tiles) {
         if (!tiles) {
-            throw new Error("Must contain at least one tile");
+            throw new Error("Must contain at least one tile.");
         }
 
         if (new Set(tiles.map((x) => x.length)).size != 1) {
@@ -42,6 +42,14 @@ class TDMap {
         }
 
         return result;
+    }
+
+    get width() {
+        return this.tiles[0].length;
+    }
+
+    get height() {
+        return this.tiles.length;
     }
 
     getSpawnPoints() {
@@ -72,7 +80,8 @@ class GridRenderer {
         this._width = 0;
         this._height = 0;
 
-        this._container = new PIXI.ParticleContainer(); //DisplayObjectContainer();
+        //this._container = new PIXI.ParticleContainer();
+        this._container = new PIXI.DisplayObjectContainer();
         this._container.interactive = true;
 
         if (this.tiles) {
@@ -84,6 +93,8 @@ class GridRenderer {
         if (!this.tiles) {
             throw new Error("Map array must be initialised.");
         }
+
+        this.container.removeChildren();
 
         this._height = this.tiles.length
         this._width = this.tiles[0].length;
@@ -100,28 +111,8 @@ class GridRenderer {
                 tileSprite.height = this.tileSize;
                 tileSprite._tileType = tileType;
 
-                console.log("adding mousedown");
-                tileSprite.on('mousedown', ((ctx, tile) => {
-                    return () => {
-                        console.log("mousedown");
-                        switch (tile._tileType) {
-                            case "o":
-                                tile._tileType = "x";
-                                break;
-                            case "x":
-                                tile._tileType = "d";
-                                break;
-                            case "d":
-                                tile._tileType = "s";
-                                break;
-                            case "s":
-                                tile._tileType = "o";
-                                break;
-                            default:
-                        }
-                        tile.setTexture(ctx.texturePack[tile._tileType]);
-                    }
-                })(this, tileSprite));
+                // tileSprite.on('mousedown', ((ctx, tile) => {
+                //     return () => {} })(this, tileSprite));
 
                 this.container.addChild(tileSprite);
             }
