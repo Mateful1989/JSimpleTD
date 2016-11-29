@@ -1,5 +1,6 @@
 "use strict";
 
+
 class UnitRenderer {
     constructor() {
         this.container = new PIXI.ParticleContainer(); //DisplayObjectContainer();
@@ -33,6 +34,8 @@ class UnitRenderer {
             for (var u of this.units) {
                 u.updatePosition(dt);
             }
+
+            this.units = this.units.filter((u) => u.sprite !== null);
         }
     }
 }
@@ -44,8 +47,9 @@ class Unit {
 
         this.sprite.x = x;
         this.sprite.y = y;
-        this.sprite.speed = speed;
         this.sprite.scale.set(scale, scale);
+
+        this.speed = speed;
         this.path = null;
 
         this.timeLastMovement = new Date();
@@ -56,24 +60,129 @@ class Unit {
         this.path = path;
     }
 
-    updatePosition(dt) {
-        if (this.path && this.path.length > 0) {
+    updatePosition2(dt) {
+        const epsilon = 0.01;
+
+        function distanceBetweenTwoPoints(x1, y1, x2, y2) {
+            let xd = x1 - x2,
+                yd = y1 - y2;
+
+            return Math.sqrt(xd * xd + yd * yd);
+        }
+
+        function interpolateCoordinates(x1, y1, x2, y2, d) {
+            // calculates p3 (x/y) that lies on the straight p1|p2 with distance(p1, p3) = d
+            let xd = x2 - x1,
+                yd = y2 - y1;
+            let len = Math.sqrt(xd * xd + yd * yd);
+
+            return [x1 + (xd / len) * d, y1 + (yd / len) * d];
+        }
+
+        if (false && this.path && this.path.length > 0) {
             // console.log("updating position according to path");
 
             let currentTime = new Date();
             if (currentTime - this.timeLastMovement > 200) {
                 // console.log("updating position according to path", this.path);
-                var pos = this.path.shift();
+                let pos = this.path.shift();
                 this.sprite.x = pos[0];
                 this.sprite.y = pos[1];
                 this.timeLastMovement = currentTime;
             }
+        }
+
+        if (this.path && this.path.length > 0) {
+            let currentGoal = this.path[0];
+
+            let x1 = this.sprite.x,
+                y1 = this.sprite.y,
+                x2 = currentGoal[0],
+                y2 = currentGoal[1];
+
+            let distance = distanceBetweenTwoPoints(x1, y1, x2, y2);
+            let distanceThisTimeFrame = dt * this.speed;
+
+            if (distance > distanceThisTimeFrame + epsilon) {
+                let [xNew, yNew] = interpolateCoordinates(x1, y1, x2, y2, distanceThisTimeFrame);
+                this.sprite.x = xNew;
+                this.sprite.y = yNew;
+            } else {
+                // distanceThisTimeFrame: 100, distance: 50
+                // distanceThisTimeFrame -= distance;
+
+                this.sprite.x = x2;
+                this.sprite.y = y2;
+                distanceThisTimeFrame -= distance;
+                this.path.shift();
+
+
+                while (this.path.length > 0) {
+                    x1 = x2;
+                    y1 = y2;
+                    [x2, y2] = this.path[0];
+
+                    distance = distanceBetweenTwoPoints(x1, y1, x2, y2);
+
+                    if (distance > distanceThisTimeFrame + epsilon) {
+                        let [xNew, yNew] = interpolateCoordinates(x1, y1, x2, y2, distanceThisTimeFrame);
+                        this.sprite.x = xNew;
+                        this.sprite.y = yNew;
+                        break;
+                    } else {
+                        this.sprite.x = x2;
+                        this.sprite.y = y2;
+                        this.path.shift();
+                    }
+                    distanceThisTimeFrame -= distance;
+                    console.log(distance, distanceThisTimeFrame);
+                }
+            }
+        } else {
+            this.sprite.destroy();
+            this.sprite = null;
+        }
+    }
+
+
+    updatePosition(dt) {
+        const epsilon = 0.01;
+
+
+
+        if (!this.path || this.path.length == 0) {
+            this.sprite.destroy();
+            this.sprite = null;
+        }
+
+        let distanceThisTimeFrame = dt * this.speed;
+
+        while (this.path.length > 0) {
+            let currentGoal = this.path[0];
+
+            let x1 = this.sprite.x,
+                y1 = this.sprite.y,
+                x2 = currentGoal[0],
+                y2 = currentGoal[1];
+            let distance = Utils.distanceBetweenTwoPoints(x1, y1, x2, y2);
+
+            if (distance > distanceThisTimeFrame + epsilon) {
+                let [xNew, yNew] = Utils.interpolateCoordinates(x1, y1, x2, y2, distanceThisTimeFrame);
+                this.sprite.x = xNew;
+                this.sprite.y = yNew;
+                break;
+            } else {
+                this.sprite.x = x2;
+                this.sprite.y = y2;
+                this.path.shift();
+            }
+            distanceThisTimeFrame -= distance;
         }
     }
 
     randomizePosition(minX, maxX, minY, maxY, speed) {
         this.sprite.x = Math.floor((Math.random() * (maxX - minX)) + minX);
         this.sprite.y = Math.floor((Math.random() * (maxY - minY)) + minY);
-        this.sprite.speed = Math.random() > 0.5 ? speed : -speed;
+        this.speed = Math.random() > 0.5 ? speed : -speed;
     }
 }

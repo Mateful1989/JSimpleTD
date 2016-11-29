@@ -29,7 +29,7 @@ class GameController {
                     y = path[0][1];
 
                 let texture = this.stageRenderer.texturePack["monster#1"];
-                let unit = new Unit(x, y, this.stageRenderer.tileSize, 1, texture);
+                let unit = new Unit(x, y, this.stageRenderer.tileSize*5, 1, texture);
                 unit.followPath(path);
 
                 this.stageRenderer.unitRenderer.addUnit(unit);

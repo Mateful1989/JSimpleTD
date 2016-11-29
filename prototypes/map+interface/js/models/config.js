@@ -51,6 +51,24 @@ Utils.loadScripts = function(array, callback) {
 }
 
 
+Utils.distanceBetweenTwoPoints = function(x1, y1, x2, y2) {
+    let xd = x1 - x2,
+        yd = y1 - y2;
+
+    return Math.sqrt(xd * xd + yd * yd);
+}
+
+Utils.interpolateCoordinates = function(x1, y1, x2, y2, d) {
+    // calculates p3 (x/y) that lies on the straight p1|p2 with distance(p1, p3) = d
+    let xd = x2 - x1,
+        yd = y2 - y1;
+    let len = Math.sqrt(xd * xd + yd * yd);
+
+    return [x1 + (xd / len) * d, y1 + (yd / len) * d];
+}
+
+
+
 class Config {
     constructor(filename, onSuccess, onFail) {
         console.log("constructor of " + this.constructor.name, arguments, filename)
