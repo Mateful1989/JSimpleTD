@@ -109,22 +109,22 @@ function search(map, start, end) {
     cameFrom[start.toString()] = null;
     gCostSoFar[start.toString()] = 0
 
-    function logFrontier(msg, x) {
-        var frontierToText = (x) => {
-            return x.map((x) => String(x.score) + ";" + x.toString()).join(", ");
-        }
+    // function logFrontier(msg, x) {
+    //     var frontierToText = (x) => {
+    //         return x.map((x) => String(x.score) + ";" + x.toString()).join(", ");
+    //     }
 
-        console.log(msg, frontierToText(x));
-    }
+    //     console.log(msg, frontierToText(x));
+    // }
 
     while (frontier.length > 0) {
-        logFrontier("pre shift", frontier);
+        // logFrontier("pre shift", frontier);
 
         let current = frontier.shift();
 
-        logFrontier("post shift", frontier);
+        // logFrontier("post shift", frontier);
 
-        console.log("  >current pos", current.pos, "compare to", end);
+        // console.log("  >current pos", current.pos, "compare to", end);
 
         if (current.pos.equals(end)) {
             isGoalReached = true;
@@ -133,7 +133,7 @@ function search(map, start, end) {
 
         let neighbours = getNeighbours(current);
 
-        console.log("neighbours", neighbours);
+        // console.log("neighbours", neighbours);
 
         for (var next of neighbours) {
             let gCost = gCostSoFar[current] + 1;
@@ -144,13 +144,13 @@ function search(map, start, end) {
                 let fCost = gCost + hCost;
                 frontier = insertNodeSorted(new Node(next, fCost), frontier);
                 cameFrom[next.toString()] = current;
-                console.log("neighbour:", next, fCost);
+                // console.log("neighbour:", next, fCost);
             }
         }
-        console.log("after insertion:", frontier);
+        // console.log("after insertion:", frontier);
     }
 
-    console.log("Came from array", cameFrom);
+    // console.log("Came from array", cameFrom);
 
     return [isGoalReached, cameFrom];
 }

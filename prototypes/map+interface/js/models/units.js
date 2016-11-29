@@ -61,13 +61,16 @@ class Unit {
     }
 
     updatePosition(dt) {
-        const epsilon = 0.01;
+        const epsilon = 0.0001;
 
+        if (!this.path) {
+            return;
+        }
 
-
-        if (!this.path || this.path.length == 0) {
+        if (this.path.length == 0) {
             this.sprite.destroy();
             this.sprite = null;
+            return;
         }
 
         let distanceThisTimeFrame = dt * this.speed;
