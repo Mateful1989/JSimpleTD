@@ -3,7 +3,7 @@
 
 class UnitRenderer {
     constructor() {
-        this.container = new PIXI.ParticleContainer(); //DisplayObjectContainer();
+        this.container = new PIXI.DisplayObjectContainer(); //ParticleContainer();
         this.units = [];
     }
 
@@ -41,16 +41,35 @@ class UnitRenderer {
 }
 
 class Unit {
-    constructor(x, y, speed, scale, texture) {
+    constructor(x, y, speed, scale, texture, mask) {
         console.log("constructing unit", arguments);
-        this.sprite = new PIXI.Sprite(texture);
+
+        if (!texture) {
+            throw new Error("Texture required");
+        }
+
+        if (texture.constructor === Array) {
+            this.sprite = new PIXI.extras.MovieClip(texture);
+            this.sprite.position.set(0);
+            this.sprite.animationSpeed = 0.05;
+            this.sprite.loop = true;
+            // this.sprite.blendMode = PIXI.BLEND_MODES.NORMAL;
+            this.sprite.play(); //or gotoAndPlay(0)
+        } else {
+            // texture = mask;
+            this.sprite = new PIXI.Sprite(texture); 
+        }
+
+        if (mask) {
+            this.sprite.mask = new PIXI.Sprite(mask);
+        }
 
         this.sprite.x = x;
         this.sprite.y = y;
         this.sprite.scale.set(scale, scale);
-
         this.speed = speed;
         this.path = null;
+
 
         this.timeLastMovement = new Date();
     }
@@ -58,6 +77,7 @@ class Unit {
 
     followPath(path) {
         this.path = path;
+        // this.sprite.play();
     }
 
     updatePosition(dt) {
@@ -68,6 +88,7 @@ class Unit {
         }
 
         if (this.path.length == 0) {
+            console.log("destroying unit", this);
             this.sprite.destroy();
             this.sprite = null;
             return;

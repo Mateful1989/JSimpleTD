@@ -1,0 +1,24 @@
+{
+    "meta": {
+        "image": "masks_i.png",
+        "size": { "w": 192, "h": 192 },
+        "scale": "1"
+    },
+    "frames": {
+        "monster#1_mask": {
+            "frame": { "x": 96, "y": 0, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        },
+        "monster#2_mask": {
+            "frame": { "x": 96, "y": 32, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        }
+
+    }
+}

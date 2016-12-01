@@ -1,6 +1,6 @@
 {
     "meta": {
-        "image": "spritesheets.png",
+        "image": "spritesheets_transparent.png",
         "size": { "w": 192, "h": 192 },
         "scale": "1"
     },
@@ -35,6 +35,13 @@
         },
         "monster#1": {
             "frame": { "x": 96, "y": 0, "w": 32, "h": 32 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 }
+        },
+        "monster#2": {
+            "frame": { "x": 96, "y": 32, "w": 32, "h": 32 },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": { "x": 32, "y": 0, "w": 32, "h": 32 },

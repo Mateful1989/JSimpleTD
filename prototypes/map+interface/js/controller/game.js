@@ -60,8 +60,11 @@ class GameController {
                         let x = path[0][0],
                             y = path[0][1];
 
-                        let texture = this.stageRenderer.texturePack["monster#1"];
-                        let unit = new Unit(x, y, this.stageRenderer.tileSize * 5, 1, texture);
+                        let texture = [this.stageRenderer.texturePack["monster#1"], this.stageRenderer.texturePack["monster#2"]];
+                        // texture = texture[0];
+                        // let mask = this.stageRenderer.texturePack["monster#1_mask"];
+                        //let texture = this.stageRenderer.texturePack["monster#1"];
+                        let unit = new Unit(x, y, this.stageRenderer.tileSize * 2, 1, texture);
                         unit.followPath(path);
 
                         this.stageRenderer.unitRenderer.addUnit(unit);
