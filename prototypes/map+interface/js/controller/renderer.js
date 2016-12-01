@@ -66,6 +66,7 @@ class StageRenderer {
 
         this.gridRenderer = null;
         this.unitRenderer = null;
+        this.towerRenderer = null;
 
         this.boundaries = null;
 
@@ -117,6 +118,11 @@ class StageRenderer {
             this.unitRenderer.addUnit(unit);
         }
 
+    }
+
+    initTowers(n) {
+        this.towerRenderer = new TowerRenderer();
+        this.stage.addChild(this.towerRenderer.container);
     }
 
     initMenus() {

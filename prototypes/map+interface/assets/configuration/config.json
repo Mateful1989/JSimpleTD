@@ -8,6 +8,7 @@
         "url": "assets/images/bunny.png"
     }],
     "scripts": ["js/models/units.js",
+        "js/models/tower.js",
         "js/models/map.js",
         "js/models/textures.js",
         "js/controller/search.js",

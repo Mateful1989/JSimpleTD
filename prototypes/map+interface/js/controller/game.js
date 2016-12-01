@@ -4,13 +4,12 @@ class GameController {
         this.stageRenderer = new StageRenderer(0, 0, this.config.autoresize, this.config.bgColor, this.config.tileSize, texturePack, bindCanvasFnc);
         this.map = null;
 
-
-
         // import and render map
         Utils.getText(config.mapFilename).then((mapString) => {
             this.map = new TDMap(mapString);
             this.stageRenderer.initMap(this.map);
             this.stageRenderer.initUnits(0);
+            this.stageRenderer.initTowers();
             this.stageRenderer.initMenus(-1);
         });
 
@@ -35,6 +34,18 @@ class GameController {
                     break;
             }
         }
+
+        this.stageRenderer.stage.on("mousemove", (event) => {
+            // console.log("mouse moved", event);
+            if (!this.stageRenderer.towerRenderer.selection) {
+                this.stageRenderer.towerRenderer.selection = new Tower(0, 0, this.tileSize, texturePack["tower#1"]);
+            }
+
+            let currTower = this.stageRenderer.towerRenderer.selection 
+            currTower.x = event.data.global.x - event.data.global.x % this.config.tileSize;
+            currTower.y = event.data.global.y - event.data.global.y % this.config.tileSize;
+        });
+
     }
 
     spawnUnit() {
