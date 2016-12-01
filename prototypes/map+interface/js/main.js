@@ -30,4 +30,16 @@ function init(configurationFilename) {
     document.getElementById("btn-spawn").addEventListener("click", function(event) {
         window.GameController.spawnUnit();
     });
+
+    document.getElementById("btn-clear-towers").addEventListener("click", function(event) {
+        window.GameController.clearTowers();
+    });
+
+    document.getElementById("btn-select-tower").addEventListener("click", function(event) {
+        window.GameController.enterSelectionMode();
+    });
+
+    document.getElementById("btn-unselect-tower").addEventListener("click", function(event) {
+        window.GameController.leaveSelectionMode();
+    });
 }

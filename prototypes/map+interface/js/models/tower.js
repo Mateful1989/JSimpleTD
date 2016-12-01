@@ -5,7 +5,8 @@ class TowerRenderer {
         this._selection = null;
     }
 
-    addUnit(tower) {
+    addTower(tower) {
+        console.log("add tower", tower);
         if (tower) {
             this.towers.push(tower);
             this.container.addChild(tower.sprite);
@@ -17,11 +18,32 @@ class TowerRenderer {
             this._selection = tower;
             //tower.sprite.anchor.set(0.5, 0.5);
             this.container.addChild(tower.sprite);
+        } else {
+        	if (this._selection) {
+        		this._selection.sprite.destroy();
+        	}
         }
     }
 
     get selection() {
         return this._selection;
+    }
+
+    addAndResetSelection() {
+        if (this.selection) {
+        	console.log("add and reset selection");
+            this.towers.push(this.selection);
+            this._selection = null;
+        }
+    }
+
+    removeAll() {
+    	console.log("removeAll");
+    	for (var t of this.towers) {
+    		t.sprite.destroy();
+    	}
+
+    	this.towers = [];
     }
 }
 
@@ -36,18 +58,18 @@ class Tower {
     }
 
     get x() {
-    	return this.sprite.x;
+        return this.sprite.x;
     }
 
     get y() {
-    	return this.sprite.y;
+        return this.sprite.y;
     }
 
     set x(x) {
-    	this.sprite.x = x;
+        this.sprite.x = x;
     }
 
     set y(y) {
-    	this.sprite.y = y;
+        this.sprite.y = y;
     }
 }

@@ -31,6 +31,10 @@ class StageRenderer {
         this.stage.on("mousedown", (event) => {
             console.log("mousedown on map", event);
 
+            if (this.towerRenderer.selection) {
+                return;
+            }
+
             if (this.state != "running") {
                 return;
             }

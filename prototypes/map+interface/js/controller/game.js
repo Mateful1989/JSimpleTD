@@ -13,6 +13,8 @@ class GameController {
             this.stageRenderer.initMenus(-1);
         });
 
+        this.selectionMode = false;
+
 
         var onEscape = InputController.key(27);
 
@@ -36,14 +38,20 @@ class GameController {
         }
 
         this.stageRenderer.stage.on("mousemove", (event) => {
-            // console.log("mouse moved", event);
-            if (!this.stageRenderer.towerRenderer.selection) {
-                this.stageRenderer.towerRenderer.selection = new Tower(0, 0, this.tileSize, texturePack["tower#1"]);
-            }
+            let currTower = this.stageRenderer.towerRenderer.selection
 
-            let currTower = this.stageRenderer.towerRenderer.selection 
+            if (!this.selectionMode || !currTower) {
+                return;
+            }
+            
             currTower.x = event.data.global.x - event.data.global.x % this.config.tileSize;
             currTower.y = event.data.global.y - event.data.global.y % this.config.tileSize;
+        });
+
+        this.stageRenderer.stage.on("mousedown", (event) => {
+            console.log("mouse down on game.js", event);
+            this.stageRenderer.towerRenderer.addAndResetSelection();
+            this.selectionMode = false;
         });
 
     }
@@ -84,8 +92,22 @@ class GameController {
                     }
                 }
             }
-
-
         }
+    }
+
+    clearTowers()  {
+        console.log("clear towers");
+
+        this.stageRenderer.towerRenderer.removeAll();
+    }
+
+    leaveSelectionMode() {
+        this.selectionMode = false;
+        this.stageRenderer.towerRenderer.selection = null;
+    }
+
+    enterSelectionMode() {
+        this.stageRenderer.towerRenderer.selection = new Tower(0, 0, this.tileSize, this.stageRenderer.texturePack["tower#1"]);
+        this.selectionMode = true;
     }
 }
