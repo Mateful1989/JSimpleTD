@@ -123,7 +123,15 @@ class StageRenderer {
 
             this.unitRenderer.addUnit(unit);
         }
+    }
 
+    isSquarePathable(x, y) {
+        // be careful: x and y are grid positions (e.g. 0..11) and not the real coordinates of the textures (x*tileSize, y*tileSize)
+        var isMapPathable = this.map.isPathable(x, y);
+
+        var isTowerAtLocation =  this.towerRenderer.isTowerAtLocation(x*this.tileSize, y*this.tileSize);
+
+        return isMapPathable && !isTowerAtLocation;
     }
 
     initTowers(n) {

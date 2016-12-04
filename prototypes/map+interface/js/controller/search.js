@@ -56,7 +56,7 @@ class Node {
 @param start - start node
 @param end - goal node
 */
-function search(map, start, end) {
+function search(map, start, end, isPathableFnc) {
     console.log("searching", map, start, end);
 
     function heuristic(a, b) {
@@ -78,7 +78,7 @@ function search(map, start, end) {
             let x = pos.x + dir[0],
                 y = pos.y + dir[1];
 
-            if (map.isPathable(x, y)) {
+            if (isPathableFnc(x, y)) {
                 result.push(new Point(x, y));
             }
         }
@@ -167,7 +167,7 @@ function reconstructPath(cameFrom, start, end) {
     return path
 }
 
-function calculateShortestPath(map, a, b) {
+function calculateShortestPath(map, a, b, isPathableFnc) {
     if (!a || !b) {
         return [];
     }
@@ -175,7 +175,7 @@ function calculateShortestPath(map, a, b) {
     let startPoint = Point.fromArray(a),
         endPoint = Point.fromArray(b);
 
-    let [isPathFound, cameFrom] = search(map, startPoint, endPoint);
+    let [isPathFound, cameFrom] = search(map, startPoint, endPoint, isPathableFnc);
 
     let path = [];
 

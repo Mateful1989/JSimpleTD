@@ -5,12 +5,32 @@ class TowerRenderer {
         this._selection = null;
     }
 
+    isTowerAtLocation(x, y) {
+        for (let t of this.towers) {
+            if (t.x == x && t.y == y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     addTower(tower) {
         console.log("add tower", tower);
-        if (tower) {
-            this.towers.push(tower);
-            this.container.addChild(tower.sprite);
+        if (!tower) {
+            console.error("no tower provided");
+            return;
         }
+
+        if (this.isTowerAtLocation(tower.x, tower.y)) {
+            console.error("tower already on that position");
+            return;
+        }
+
+        this.towers.push(tower);
+
+        this.container.addChild(tower.sprite);
+
     }
 
     addProjectile(projectile) {
@@ -38,10 +58,13 @@ class TowerRenderer {
         return this._selection;
     }
 
+
+
     addAndResetSelection() {
         if (this.selection) {
             console.log("add and reset selection");
-            this.towers.push(this.selection);
+            this.container.removeChild(this.selection.sprite)
+            this.addTower(this.selection);
             this._selection = null;
         }
     }

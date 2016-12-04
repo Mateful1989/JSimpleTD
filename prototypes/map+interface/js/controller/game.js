@@ -91,7 +91,7 @@ class GameController {
 
             for (var spawn of spawnPoints) {
                 for (var goal of destinationPoints) {
-                    let path = calculateShortestPath(this.map, spawn, goal);
+                    let path = calculateShortestPath(this.map, spawn, goal, (x, y) => this.stageRenderer.isSquarePathable(x, y));
 
                     if (path && path.length > 0) {
                         console.log(path.length);
