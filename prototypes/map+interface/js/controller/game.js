@@ -50,7 +50,7 @@ class GameController {
         }
 
         this.stageRenderer.stage.on("mousemove", (event) => {
-            if (!this.stageRenderer) {
+            if (!this.stageRenderer || !this.stageRenderer.towerRenderer) {
                 return;
             }
 
