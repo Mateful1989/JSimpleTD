@@ -17,6 +17,7 @@ class GameController {
 
 
         var onEscape = InputController.key(27);
+        var onPressS = InputController.key('S'.charCodeAt(0));
 
         this.state = "game";
         this.tileSize = this.config.tileSize
@@ -38,7 +39,21 @@ class GameController {
             }
         }
 
+        onPressS.release = (event) => {
+            console.log(this, event);
+
+            if (this.selectionMode) {
+                this.leaveSelectionMode();
+            } else {
+                this.enterSelectionMode();
+            }
+        }
+
         this.stageRenderer.stage.on("mousemove", (event) => {
+            if (!this.stageRenderer) {
+                return;
+            }
+
             let currTower = this.stageRenderer.towerRenderer.selection
 
             if (!this.selectionMode || !currTower) {
@@ -51,8 +66,12 @@ class GameController {
 
         this.stageRenderer.stage.on("mousedown", (event) => {
             console.log("mouse down on game.js", event);
-            this.stageRenderer.towerRenderer.addAndResetSelection();
-            this.selectionMode = false;
+            if (this.selectionMode) {
+                console.log("build tower");
+                this.stageRenderer.towerRenderer.addAndResetSelection();
+                this.selectionMode = false;
+                this.enterSelectionMode();
+            }
         });
 
     }
@@ -108,9 +127,14 @@ class GameController {
     leaveSelectionMode() {
         this.selectionMode = false;
         this.stageRenderer.towerRenderer.selection = null;
+        console.log("selection reset:", this.stageRenderer.towerRenderer.selection);
     }
 
-    enterSelectionMode() {
+    enterSelectionMode(x = -99, y = -99) {
+        if (this.selectionMode) {
+            return;
+        }
+
         let attackDamage = 50,
             attackRange = 4 * this.tileSize,
             attackSpeed = 3,
@@ -119,7 +143,7 @@ class GameController {
         let onAddProjectile = (p) => this.stageRenderer.towerRenderer.addProjectile(p);
         let onRemoveProjectile = (p) => this.stageRenderer.towerRenderer.removeProjectile(p);
         // constructor(x, y, size, attackRange, attackSpeed, attackDamage, projectileSpeed, texture, projectileTexture, onAddProjectile, onRemoveProjectile)
-        this.stageRenderer.towerRenderer.selection = new Tower(0, 0, this.tileSize, attackRange, attackSpeed, attackDamage, projectileSpeed, this.stageRenderer.texturePack["tower#1"], this.stageRenderer.texturePack["projectile#1"],
+        this.stageRenderer.towerRenderer.selection = new Tower(x, y, this.tileSize, attackRange, attackSpeed, attackDamage, projectileSpeed, this.stageRenderer.texturePack["tower#1"], this.stageRenderer.texturePack["projectile#1"],
             onAddProjectile, onRemoveProjectile);
         this.selectionMode = true;
     }

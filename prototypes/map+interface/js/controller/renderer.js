@@ -32,10 +32,12 @@ class StageRenderer {
             console.log("mousedown on map", event);
 
             if (this.towerRenderer.selection) {
+                console.log("leaving because there is an item selected:", this.towerRenderer.selection);
                 return;
             }
 
             if (this.state != "running") {
+                console.log("leaving because the game is not running");
                 return;
             }
 

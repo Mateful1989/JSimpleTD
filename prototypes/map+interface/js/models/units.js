@@ -82,17 +82,17 @@ class Unit {
         return this.sprite ? this.sprite.y : null;
     }
 
-    die() {
+    kill() {
         this.sprite.destroy();
         this.sprite = null;
     }
 
     reduceHitpoints(damageTaken) {
-        console.log("unit got hit by tower", this, damageTaken);
+        console.log("unit got hit by tower: ", this.hitpoints, "-=", damageTaken);
         this.hitpoints -= damageTaken;
 
         if (this.hitpoints <= 0) {
-            this.die();
+            this.kill();
         }
     }
 
@@ -119,7 +119,7 @@ class Unit {
 
         if (this.path.length == 0) {
             console.log("destroying unit", this);
-            this.die();
+            this.kill();
             return;
         }
 

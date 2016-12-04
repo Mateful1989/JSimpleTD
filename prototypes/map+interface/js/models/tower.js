@@ -30,6 +30,7 @@ class TowerRenderer {
             if (this._selection) {
                 this._selection.sprite.destroy();
             }
+            this._selection = null;
         }
     }
 
@@ -48,7 +49,7 @@ class TowerRenderer {
     removeAll() {
         console.log("removeAll");
         for (var t of this.towers) {
-            t.sprite.destroy();
+            t.kill();
         }
 
         this.towers = [];
@@ -85,6 +86,17 @@ class Tower {
 
         this.onAddProjectile = onAddProjectile;
         this.onRemoveProjectile = onRemoveProjectile;
+    }
+
+    kill() {
+        this.sprite.destroy();
+        this.sprite = null;
+
+        for (let i = 0; i < this.projectiles.length; i++) {
+            this.projectiles[i].kill();
+        }
+
+        this.projectiles = [];
     }
 
     get x() {
@@ -210,7 +222,7 @@ class Projectile {
 
     }
 
-    die() {
+    kill() {
         this.sprite.destroy();
         this.sprite = null;
     }
@@ -219,7 +231,7 @@ class Projectile {
         // console.log("updating coordinates of projectile", this);
         if (!this.target || !this.target.isVisible) {
             // console.log("detroy texture");
-            this.die();
+            this.kill();
             return;
         }
 
@@ -229,7 +241,7 @@ class Projectile {
         if (distanceThisTimeFrame > distanceToTarget) {
             // console.log("detroy texture");
             this.target.reduceHitpoints(this.damage);
-            this.die();
+            this.kill();
         } else {
             // console.log("update coordinates");
             let [xNew, yNew] = Utils.interpolateCoordinates(this.x, this.y, this.target.x, this.target.y, distanceThisTimeFrame);
