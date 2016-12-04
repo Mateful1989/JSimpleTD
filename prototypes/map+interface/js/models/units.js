@@ -41,7 +41,7 @@ class UnitRenderer {
 }
 
 class Unit {
-    constructor(x, y, speed, scale, texture, mask) {
+    constructor(x, y, speed, hitpoints, scale, texture, mask) {
         console.log("constructing unit", arguments);
 
         if (!texture) {
@@ -57,7 +57,7 @@ class Unit {
             this.sprite.play(); //or gotoAndPlay(0)
         } else {
             // texture = mask;
-            this.sprite = new PIXI.Sprite(texture); 
+            this.sprite = new PIXI.Sprite(texture);
         }
 
         if (mask) {
@@ -68,10 +68,32 @@ class Unit {
         this.sprite.y = y;
         this.sprite.scale.set(scale, scale);
         this.speed = speed;
+        this.hitpoints = hitpoints;
         this.path = null;
 
-
         this.timeLastMovement = new Date();
+    }
+
+    get x() {
+        return this.sprite ? this.sprite.x : null;
+    }
+
+    get y() {
+        return this.sprite ? this.sprite.y : null;
+    }
+
+    die() {
+        this.sprite.destroy();
+        this.sprite = null;
+    }
+
+    reduceHitpoints(damageTaken) {
+        console.log("unit got hit by tower", this, damageTaken);
+        this.hitpoints -= damageTaken;
+
+        if (this.hitpoints <= 0) {
+            this.die();
+        }
     }
 
 
@@ -80,17 +102,24 @@ class Unit {
         // this.sprite.play();
     }
 
+    get isVisible() {
+        return this.sprite != null;
+    }
+
+    hasDied() {
+        return !this.isVisisble;
+    }
+
     updatePosition(dt) {
         const epsilon = 0.0001;
 
-        if (!this.path) {
+        if (!this.path || !(this.sprite != null)) {
             return;
         }
 
         if (this.path.length == 0) {
             console.log("destroying unit", this);
-            this.sprite.destroy();
-            this.sprite = null;
+            this.die();
             return;
         }
 

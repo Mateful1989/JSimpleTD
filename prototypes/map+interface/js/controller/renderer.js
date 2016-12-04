@@ -135,7 +135,7 @@ class StageRenderer {
         let x = (this.renderer.width - w) / 2,
             y = (this.renderer.height - h) / 2;
 
-        
+
         this.menus.push(new Menu(x, y, w, h, "main", "Pause!"));
 
         for (var m of this.menus) {
@@ -177,6 +177,10 @@ class StageRenderer {
     update(dt) {
         if (this.unitRenderer && this.gridRenderer) {
             this.unitRenderer.updatePositions(dt, this.tileSize, this.boundaries, "PATHING");
+
+            if (this.towerRenderer) {
+                this.towerRenderer.update(dt, this.unitRenderer.units);
+            }
         }
     }
 }

@@ -19,6 +19,7 @@ class GameController {
         var onEscape = InputController.key(27);
 
         this.state = "game";
+        this.tileSize = this.config.tileSize
 
         onEscape.release = (event) => {
             console.log(this, event);
@@ -43,9 +44,9 @@ class GameController {
             if (!this.selectionMode || !currTower) {
                 return;
             }
-            
-            currTower.x = event.data.global.x - event.data.global.x % this.config.tileSize;
-            currTower.y = event.data.global.y - event.data.global.y % this.config.tileSize;
+
+            currTower.x = event.data.global.x - event.data.global.x % this.tileSize;
+            currTower.y = event.data.global.y - event.data.global.y % this.tileSize;
         });
 
         this.stageRenderer.stage.on("mousedown", (event) => {
@@ -57,6 +58,8 @@ class GameController {
     }
 
     spawnUnit() {
+        let unitHitpoints = 100;
+
         console.log("spawn");
         if (this.map) {
             let spawnPoints = this.map.getSpawnPoints(0);
@@ -83,7 +86,8 @@ class GameController {
                         // texture = texture[0];
                         // let mask = this.stageRenderer.texturePack["monster#1_mask"];
                         //let texture = this.stageRenderer.texturePack["monster#1"];
-                        let unit = new Unit(x, y, this.stageRenderer.tileSize * 2, 1, texture);
+
+                        let unit = new Unit(x, y, this.stageRenderer.tileSize * 2, unitHitpoints, 1, texture);
                         unit.followPath(path);
 
                         this.stageRenderer.unitRenderer.addUnit(unit);
@@ -95,7 +99,7 @@ class GameController {
         }
     }
 
-    clearTowers()  {
+    clearTowers() {
         console.log("clear towers");
 
         this.stageRenderer.towerRenderer.removeAll();
@@ -107,7 +111,16 @@ class GameController {
     }
 
     enterSelectionMode() {
-        this.stageRenderer.towerRenderer.selection = new Tower(0, 0, this.tileSize, this.stageRenderer.texturePack["tower#1"]);
+        let attackDamage = 50,
+            attackRange = 4 * this.tileSize,
+            attackSpeed = 3,
+            projectileSpeed = 10 * this.tileSize;
+
+        let onAddProjectile = (p) => this.stageRenderer.towerRenderer.addProjectile(p);
+        let onRemoveProjectile = (p) => this.stageRenderer.towerRenderer.removeProjectile(p);
+        // constructor(x, y, size, attackRange, attackSpeed, attackDamage, projectileSpeed, texture, projectileTexture, onAddProjectile, onRemoveProjectile)
+        this.stageRenderer.towerRenderer.selection = new Tower(0, 0, this.tileSize, attackRange, attackSpeed, attackDamage, projectileSpeed, this.stageRenderer.texturePack["tower#1"], this.stageRenderer.texturePack["projectile#1"],
+            onAddProjectile, onRemoveProjectile);
         this.selectionMode = true;
     }
 }
